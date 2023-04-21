@@ -20,7 +20,7 @@
 
 let Prompt = {
 	state: true, //Comodín que controla la creación de cuadros de ingreso de datos
-	go: function(mensaje, inputType, callback, properties, width, nodeBefore){
+	go: (mensaje, inputType, callback, properties, width, nodeBefore) => {
 		//Si no se recibe un mensaje, se establece uno por defecto
 		if (!mensaje || ({}.toString.call(mensaje) == "[object String]" && !mensaje.length)){
 			mensaje = "Ingrese el texto:";
@@ -44,7 +44,7 @@ let Prompt = {
 		}
 	},
 
-	show: () => {
+	show: _ => {
 		//Se almacena el valor actual de la propiedad overflow del document
 		Prompt.overflow = getComputedStyle(document.body).overflow;
 
@@ -53,7 +53,7 @@ let Prompt = {
 		Prompt.back.classList.add("prompt");
 		Prompt.back.style.width = window.innerWidth + "px";
 		Prompt.back.style.height = window.innerHeight + "px";
-		Prompt.back.style.backgroundColor = "#708090";
+		Prompt.back.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
 		Prompt.back.style.top = 0;
 		Prompt.back.style.left = 0;
 		Prompt.back.style.margin = 0;
@@ -154,9 +154,7 @@ let Prompt = {
 		Prompt.input.focus();
 
 		//Se da visibilidad al fondo y pregunta
-		setTimeout(() => {
-			Prompt.back.style.opacity = .95;
-		}, 100);
+		setTimeout(_ => Prompt.back.style.opacity = .95, 100);
 
 		//Si se pulsa el botón de envío
 		Prompt.send.addEventListener("click", Prompt.checkSend, false);
@@ -174,7 +172,7 @@ let Prompt = {
 		Prompt.cancel.addEventListener("click", Prompt.hide, false);
 	},
 
-	checkSend: () => {
+	checkSend: _ => {
 		let nodeValue = "";
 
 		//Si el cuadro de ingreso de datos tiene uno o más caracteres
@@ -201,38 +199,33 @@ let Prompt = {
 		}
 	},
 
-	hide: () => {
+	hide: _ => {
 		//Se desvanecen el fondo y su contenido
 		Prompt.back.style.opacity = 0;
 
-		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido, se devuelve al documento sus barras de desplazamiento y el valor del comodín vuelve a true
-		setTimeout(() => {
-			document.body.removeChild(Prompt.back);
-			document.body.style.overflow = Prompt.overflow;
+		//Se devuelve al documento sus barras de desplazamiento
+		document.body.style.overflow = Prompt.overflow;
+
+		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
+		setTimeout(_ => {
+			document.body.removeChild(Prompt.back);			
 			Prompt.flag = true;
 		}, 200);
 	},
 
-	width: () => {
-		if (window.matchMedia("(min-width: 920px)").matches){
-			return "350px";
-		}
-		else {
-			return "250px";
-		}
-	},
+	width: _ => window.matchMedia("(min-width: 920px)").matches ? "350px" : "250px",
 
-	resize: () => {
+	resize: _ => {
 		Prompt.back.style.width = window.innerWidth + "px";
 		Prompt.back.style.height = window.innerHeight + "px";
 		Prompt.front.style.width = Prompt.width();
 		Prompt.back.style.top = 0;
 	},
 
-	buttons: (text) => {
+	buttons: text => {
 		let button = document.createElement("b");
 		
-		button.style.backgroundColor = "#696969";
+		button.style.backgroundColor = "#262626";
 		button.style.color = "snow";
 		button.style.fontWeight = "bold";
 		button.style.cursor = "pointer";
@@ -246,13 +239,8 @@ let Prompt = {
 		button.style.borderRadius = "5px";
 		button.textContent = text;		
 
-		button.addEventListener("mouseover", () => {
-			button.style.backgroundColor = "#191919";
-		}, false);
-
-		button.addEventListener("mouseout", () => {
-			button.style.backgroundColor = "#696969";
-		}, false);		
+		button.addEventListener("mouseover", _ => button.style.backgroundColor = "#191919", false);
+		button.addEventListener("mouseout", _ => button.style.backgroundColor = "#262626", false);		
 
 		return button;
 	}
