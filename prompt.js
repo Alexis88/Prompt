@@ -53,7 +53,7 @@ let Prompt = {
 		Prompt.back.classList.add("prompt");
 		Prompt.back.style.width = window.innerWidth + "px";
 		Prompt.back.style.height = window.innerHeight + "px";
-		Prompt.back.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+		Prompt.back.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
 		Prompt.back.style.top = 0;
 		Prompt.back.style.left = 0;
 		Prompt.back.style.margin = 0;
@@ -61,7 +61,6 @@ let Prompt = {
 		Prompt.back.style.display = "flex";
 		Prompt.back.style.alignItems = "center";
 		Prompt.back.style.justifyContent = "center";
-		Prompt.back.style.opacity = 0;
 		Prompt.back.style.transition = "all ease .15s";
 		Prompt.back.style.zIndex = "8888 !important";
 
@@ -153,14 +152,11 @@ let Prompt = {
 		//Se le da el enfoque al cuadro de ingreso de datos
 		Prompt.input.focus();
 
-		//Se da visibilidad al fondo y pregunta
-		setTimeout(_ => Prompt.back.style.opacity = .95, 100);
-
 		//Si se pulsa el botón de envío
 		Prompt.send.addEventListener("click", Prompt.checkSend, false);
 
 		//Si el cuadro de ingreso de datos está activo y se pulsa la tecla ENTER
-		Prompt.input.addEventListener("keypress", (e) => {
+		Prompt.input.addEventListener("keypress", e => {
 			e.which == 13 && Prompt.checkSend();
 		}, false);
 
