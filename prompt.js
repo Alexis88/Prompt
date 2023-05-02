@@ -34,11 +34,11 @@ let Prompt = {
 		Prompt.inputWidth = width || "90%";
 		Prompt.nodeBefore = nodeBefore || null;
 
-		//Si no hay otro cuadro de Promptación, se procede a mostrar uno nuevo
+		//Si no hay otro cuadro de ingreso de datos, se procede a mostrar uno nuevo
 		if (Prompt.state){
 			Prompt.show();
 		}
-		//Caso contrario, se le informa al usuario que tiene que resolver la Promptación pendiente
+		//Caso contrario, se le informa al usuario que tiene que resolver el ingreso de datos pendiente
 		else{
 			Notification.msg("Tiene un ingreso de datos pendiente");
 		}
@@ -63,6 +63,17 @@ let Prompt = {
 		Prompt.back.style.justifyContent = "center";
 		Prompt.back.style.transition = "all ease .15s";
 		Prompt.back.style.zIndex = "8888 !important";
+
+		//Animación para mostrar el cuadro de ingreso de datos
+		Prompt.back.animate([{
+			transform: "scale(0)",
+			opacity: 0
+		}, {
+			transform: "scale(1)",
+			opacity: 1
+		}], {
+			duration: 400
+		});
 
 		//Cuadro frontal
 		Prompt.front = document.createElement("div");
@@ -196,7 +207,18 @@ let Prompt = {
 	},
 
 	hide: _ => {
-		//Se desvanecen el fondo y su contenido
+		//Se oculta el cuadro de ingreso de datos con un efecto de animación
+		Prompt.back.animate([{
+			transform: "scale(1)",
+			opacity: 1
+		}, {
+			transform: "scale(0)",
+			opacity: 0
+		}], {
+			duration: 400
+		});
+
+		//Se oculta el cuadro de ingreso de datos del todo (para evitar el problema del parpadeo)
 		Prompt.back.style.opacity = 0;
 
 		//Se devuelve al documento sus barras de desplazamiento
@@ -221,7 +243,7 @@ let Prompt = {
 	buttons: text => {
 		let button = document.createElement("b");
 		
-		button.style.backgroundColor = "#262626";
+		button.style.backgroundColor = "#305165";
 		button.style.color = "snow";
 		button.style.fontWeight = "bold";
 		button.style.cursor = "pointer";
@@ -236,7 +258,7 @@ let Prompt = {
 		button.textContent = text;		
 
 		button.addEventListener("mouseover", _ => button.style.backgroundColor = "#191919", false);
-		button.addEventListener("mouseout", _ => button.style.backgroundColor = "#262626", false);		
+		button.addEventListener("mouseout", _ => button.style.backgroundColor = "#305165", false);		
 
 		return button;
 	}
