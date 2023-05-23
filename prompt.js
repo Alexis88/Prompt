@@ -66,10 +66,8 @@ let Prompt = {
 
 		//Animación para mostrar el cuadro de ingreso de datos
 		Prompt.back.animate([{
-			transform: "scale(0)",
 			opacity: 0
 		}, {
-			transform: "scale(1)",
 			opacity: 1
 		}], {
 			duration: 400
@@ -154,6 +152,17 @@ let Prompt = {
 		//Se adhiere el cuadro
 		Prompt.back.appendChild(Prompt.front);
 
+		//Animación para mostrar el contenido central
+		Prompt.front.animate([{
+			transform: "scaleY(0)",
+			opacity: 0
+		}, {
+			transform: "scaleY(1)",
+			opacity: 1
+		}], {
+			duration: 400
+		});
+
 		//Se adhiere el fondo al documento
 		document.body.appendChild(Prompt.back);
 
@@ -209,10 +218,19 @@ let Prompt = {
 	hide: _ => {
 		//Se oculta el cuadro de ingreso de datos con un efecto de animación
 		Prompt.back.animate([{
-			transform: "scale(1)",
 			opacity: 1
 		}, {
-			transform: "scale(0)",
+			opacity: 0
+		}], {
+			duration: 400
+		});
+
+		//Se oculta el contenido central
+		Prompt.front.animate([{
+			transform: "scaleY(1)",
+			opacity: 1
+		}, {
+			transform: "scaleY(0)",
 			opacity: 0
 		}], {
 			duration: 400
