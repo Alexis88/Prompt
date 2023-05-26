@@ -5,6 +5,8 @@
  *
  * MODO DE USO: Prompt.go("El mensaje que indique al usuario qué dato tiene que ingresar", "Tipo de <input>", Llamada de retorno, Propiedades del <input>, Ancho del <input>, "Nodo a insertar antes del <input>");
  *
+ * Se empleó el archivo notification.js: https://github.com/Alexis88/Notification
+ *
  * @author		Alexis López Espinoza
  * @version		1.0
  * @param		{mensaje}		String		El mensaje que indique al usuario qué dato tiene que ingresar
