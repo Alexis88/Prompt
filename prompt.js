@@ -24,8 +24,7 @@ let Prompt = {
 		 * options.inputType: El tipo de caja de texto
 		 * options.callback: La llamada de retorno a ejecutarse luego de enviar el texto ingresado
 		 * options.properties: Propiedades adicionales para la caja de texto
-		 * options.content: Objeto con colores para el fondo del cuadro, el texto del encabezado y de la caja de texto
-		 * options.width: El ancho de la caja de texto
+		 * options.content: Objeto con propiedades CSS para personalizar los elementos del cuadro
 		 * options.nodeBefore: El nodo que se insertará antes de la caja de texto
 		 */
 	){
@@ -48,7 +47,6 @@ let Prompt = {
 		Prompt.callback = Prompt.options?.callback || null;
 		Prompt.content = Prompt.options?.content || null;
 		Prompt.properties = Prompt.options?.properties || null;
-		Prompt.inputWidth = Prompt.options?.width || "90%";
 		Prompt.nodeBefore = Prompt.options?.nodeBefore || null;
 
 		//Si no hay otro cuadro de ingreso de datos, se procede a mostrar uno nuevo
@@ -93,8 +91,10 @@ let Prompt = {
 		//Cuadro frontal
 		Prompt.front = document.createElement("div");
 		Prompt.front.style.width = Prompt.width();
-		Prompt.front.style.backgroundColor = Prompt.content?.front?.length ? Prompt.content.front : "#FFFFEF";
-		Prompt.front.style.borderRadius = "5px";
+		Prompt.front.style.backgroundColor = Prompt.content?.front?.backgroundColor?.length ? Prompt.content.front.backgroundColor : "#FFFFEF";
+		Prompt.front.style.boxShadow = "0 3px 10px rgb(0 0 0 / 0.2)";
+		Prompt.front.style.border = Prompt.content?.front?.border?.length ? Prompt.content.front.border : "";
+		Prompt.front.style.borderRadius = Prompt.content?.front?.borderRadius?.length ? Prompt.content.front.borderRadius : "5px";
 		Prompt.front.style.paddingTop = "1%";
 		Prompt.front.style.paddingBottom = "1%";
 		Prompt.front.style.paddingRight = "2.5%";
@@ -119,7 +119,7 @@ let Prompt = {
 		Prompt.label.style.marginBottom = "1%";
 		Prompt.label.style.userSelect = "none";
 		Prompt.label.style.fontWeight = "bold";
-		Prompt.label.style.color = Prompt.content?.label?.length ? Prompt.content.label : "#1a1a1a";
+		Prompt.label.style.color = Prompt.content?.label?.color?.length ? Prompt.content.label.color : "#1a1a1a";
 		Prompt.label.textContent = Prompt.mensaje;
 
 		//El cuadro de ingreso de datos
@@ -130,9 +130,9 @@ let Prompt = {
 		Prompt.input.style.backgroundColor = "transparent";
 		Prompt.input.style.outline = 0;
 		Prompt.input.style.border = 0;
-		Prompt.input.style.width = Prompt.inputWidth || "90%";
-		Prompt.input.style.borderBottom = Prompt.content?.border?.length ? `.1rem solid ${Prompt.content.border}` : ".1rem solid gray";
-		Prompt.input.style.color = Prompt.content?.input?.length ? Prompt.content.input : "#262626";
+		Prompt.input.style.width = Prompt.content?.input?.width?.length ? Prompt.content.input.width : "90%";
+		Prompt.input.style.borderBottom = Prompt.content?.input?.borderBottom?.length ? Prompt.content.input.borderBottom : ".1rem solid gray";
+		Prompt.input.style.color = Prompt.content?.input?.color?.length ? Prompt.content.input.color : "#262626";
 
 		//Si se establecieron otras propiedades, se añaden al <input>
 		if (Prompt.properties){
