@@ -1,40 +1,49 @@
 /**
- * Prompt personalizado
+ * PROMPT PERSONALIZADO
  *
  * Este script genera un cuadro emergente que emula al cuadro de ingreso de datos del método window.prompt()
  *
- * MODO DE USO: Prompt.go("El mensaje que indique al usuario qué dato tiene que ingresar", "Tipo de <input>", Llamada de retorno, Propiedades del <input>, Ancho del <input>, "Nodo a insertar antes del <input>");
+ * MODO DE USO: Prompt.go("Texto a mostrar"/{Objeto de opciones de configuración});
  *
  * Se empleó el archivo notification.js: https://github.com/Alexis88/Notification
  *
  * @author		Alexis López Espinoza
- * @version		1.0
- * @param		{mensaje}		String		El mensaje que indique al usuario qué dato tiene que ingresar
- * @param		{inputType}		String		El tipo de <input>
- * @param		{callback}		Function	Una función de llamada de retorno que se ejecutará luego 
- * 											de que el usuario pulse el botón de envío.
- * @param		{properties}	Object		Un objeto literal con propiedades adicionales para el <input>
- * @param		{width}			String		El ancho del <input>
- * @param		{nodeBefore}	String		Un nodo a insertar antes que el <input>
+ * @version		2.0
+ * @param		options			Plain Object/String		
  */
 
 "use strict";
 
 let Prompt = {
 	state: true, //Comodín que controla la creación de cuadros de ingreso de datos
-	go: (mensaje, inputType, callback, properties, width, nodeBefore) => {
-		//Si no se recibe un mensaje, se establece uno por defecto
-		if (!mensaje || ({}.toString.call(mensaje) == "[object String]" && !mensaje.length)){
-			mensaje = "Ingrese el texto:";
+	go: function(
+		options
+		/*** OPCIONES DE CONFIGURACIÓN ***
+		 * 
+		 * options.mensaje: El mensaje a mostrar
+		 * options.inputType: El tipo de caja de texto
+		 * options.callback: La llamada de retorno a ejecutarse luego de enviar el texto ingresado
+		 * options.properties: Propiedades adicionales para la caja de texto
+		 * options.width: El ancho de la caja de texto
+		 * options.nodeBefore: El nodo que se insertará antes de la caja de texto
+		 */
+	){
+		//Si se recibe solo un argumento y es una cadena de texto, se descarta el uso del objeto con las opciones de configuración
+		if (arguments.length === 1 && {}.toString.call(arguments[0]) === "[object String]"){
+			Prompt.mensaje = options;
+		}
+		//Caso contrario, se conserva el objeto con las opciones de configuración
+		else{
+			Prompt.options = options;
 		}
 
 		//Se almacenan el mensaje, el tipo de campo, la llamada de retorno y las propiedades
-		Prompt.mensaje = mensaje;
-		Prompt.type = inputType || "text";
-		Prompt.callback = callback || null;
-		Prompt.properties = properties || null;
-		Prompt.inputWidth = width || "90%";
-		Prompt.nodeBefore = nodeBefore || null;
+		Prompt.mensaje = Prompt.options?.mensaje || Prompt.mensaje;
+		Prompt.type = Prompt.options?.inputType || "text";
+		Prompt.callback = Prompt.options?.callback || null;
+		Prompt.properties = Prompt.options?.properties || null;
+		Prompt.inputWidth = Prompt.options?.width || "90%";
+		Prompt.nodeBefore = Prompt.options?.nodeBefore || null;
 
 		//Si no hay otro cuadro de ingreso de datos, se procede a mostrar uno nuevo
 		if (Prompt.state){
