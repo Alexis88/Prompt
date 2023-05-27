@@ -87,7 +87,7 @@ let Prompt = {
 		//Cuadro frontal
 		Prompt.front = document.createElement("div");
 		Prompt.front.style.width = Prompt.width();
-		Prompt.front.style.backgroundColor = "#FFFFEF";
+		Prompt.front.style.backgroundColor = "snow";
 		Prompt.front.style.borderRadius = "5px";
 		Prompt.front.style.paddingTop = "1%";
 		Prompt.front.style.paddingBottom = "1%";
