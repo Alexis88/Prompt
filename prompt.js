@@ -28,13 +28,17 @@ let Prompt = {
 		 * options.nodeBefore: El nodo que se insertará antes de la caja de texto
 		 */
 	){
-		//Si se recibe una cadena de texto como argumento, se descarta el uso del objeto con las opciones de configuración
-		if (arguments.length && {}.toString.call(arguments[0]) === "[object String]"){
-			Prompt.mensaje = options;
-		}
-		//Si se recibe un objeto como argumento, se conserva el objeto con las opciones de configuración
-		else if (arguments.length && {}.toString.call(arguments[0]) === "[object Object]"){
-			Prompt.options = options;
+		//Si se recibió argumentos
+		if (arguments.length){
+			//Si el argumento no es un objeto, se lo establece como el texto a mostrar
+			if( {}.toString.call(arguments[0]) !== "[object Object]"){
+				Prompt.mensaje = options;
+			}
+			//Si el argumento es un objeto, se lo establece como configuración del cuadro
+			else if (arguments.length && {}.toString.call(arguments[0]) === "[object Object]"){
+				Prompt.options = options;
+				Prompt.mensaje = options.mensaje;
+			}
 		}
 		//Caso contrario, se aborta la ejecución
 		else{
@@ -44,7 +48,7 @@ let Prompt = {
 		//Se almacenan el mensaje, el tipo de campo, la llamada de retorno y las propiedades
 		Prompt.mensaje = Prompt.options?.mensaje || Prompt.mensaje;
 		Prompt.type = Prompt.options?.inputType || "text";
-		Prompt.callback = Prompt.options?.callback || null;
+		Prompt.callback = Prompt.options?.callback && {}.toString.call(Prompt.options?.callback) === "[object Function]" ? Prompt.options.callback : null;
 		Prompt.content = Prompt.options?.content || null;
 		Prompt.properties = Prompt.options?.properties || null;
 		Prompt.nodeBefore = Prompt.options?.nodeBefore || null;
@@ -219,7 +223,7 @@ let Prompt = {
 			}
 				
 			//Si se recibió una llamada de retorno y es de tipo Function, se le pasa el valor ingresado como argumento y se ejecuta
-			if (Prompt.callback && {}.toString.call(Prompt.callback) == "[object Function]"){
+			if (Prompt.callback){
 				Prompt.callback(nodeValue + Prompt.input.value);
 			}
 			//Si no, se devuelve el valor ingresado
