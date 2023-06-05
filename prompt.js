@@ -51,12 +51,12 @@ const Prompt = {
 		}
 
 		//Se almacenan el mensaje, el tipo de campo, la llamada de retorno y las propiedades
-		Prompt.mensaje = Prompt.options?.mensaje || Prompt.mensaje;
-		Prompt.type = Prompt.options?.inputType || "text";
+		Prompt.mensaje = Prompt.options?.mensaje ?? Prompt.mensaje;
+		Prompt.type = Prompt.options?.inputType ?? "text";
 		Prompt.callback = Prompt.options?.callback && {}.toString.call(Prompt.options?.callback) === "[object Function]" ? Prompt.options.callback : null;
-		Prompt.content = Prompt.options?.content || null;
-		Prompt.properties = Prompt.options?.properties || null;
-		Prompt.nodeBefore = Prompt.options?.nodeBefore || null;
+		Prompt.content = Prompt.options?.content ?? null;
+		Prompt.properties = Prompt.options?.properties ?? null;
+		Prompt.nodeBefore = Prompt.options?.nodeBefore ?? null;
 
 		//Se muestra el cuadro
 		Prompt.show();
@@ -123,10 +123,30 @@ const Prompt = {
 
 	events: _ => {
 		//Si se pulsa el botón de envío
-		Prompt.send.addEventListener("click", Prompt.checkSend, false);
+		Prompt.send.addEventListener("click", _ => {
+			Prompt.hide();
+
+			if (Prompt.callback){
+				Prompt.callback();
+			}
+			else{
+				return true;
+			}
+		}, false);
 
 		//Si el cuadro de ingreso de datos está activo y se pulsa la tecla ENTER, se procesa el dato
-		Prompt.input.addEventListener("keypress", e => e.which == 13 && Prompt.checkSend(), false);
+		Prompt.input.addEventListener("keypress", e => {
+			if (e.which == 13){
+				Prompt.hide();
+				
+				if (Prompt.callback){
+					Prompt.callback();
+				}
+				else{
+					return true;
+				}				
+			}
+		}, false);
 
 		//Al girar el dispositivo, cambian las dimensiones del fondo
 		window.addEventListener("orientationchange", Prompt.resize, false);
@@ -239,8 +259,7 @@ const Prompt = {
 		`;
 
 		//Se adhieren los botones al contenedor
-		Prompt.container.appendChild(Prompt.send);
-		Prompt.container.appendChild(Prompt.cancel);
+		Prompt.container.append(Prompt.send, Prompt.cancel);
 	},
 
 	checkSend: _ => {
@@ -296,10 +315,12 @@ const Prompt = {
 		//Se devuelve al documento sus barras de desplazamiento
 		document.body.style.overflow = Prompt.overflow;
 
+		//Se vuelve a permitir la creación de un nuevo cuadro
+		Prompt.state = true;
+
 		//Luego de 200 milésimas de segundo, se eliminan el fondo y su contenido y el valor del comodín vuelve a true
 		setTimeout(_ => {
-			Prompt.back && Prompt.back.remove();
-			Prompt.state = true;
+			Prompt.back && Prompt.back.remove();			
 		}, 200);
 	},
 
