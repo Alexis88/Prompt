@@ -123,30 +123,10 @@ const Prompt = {
 
 	events: _ => {
 		//Si se pulsa el botón de envío
-		Prompt.send.addEventListener("click", _ => {
-			Prompt.hide();
-
-			if (Prompt.callback){
-				Prompt.callback();
-			}
-			else{
-				return true;
-			}
-		}, false);
+		Prompt.send.addEventListener("click", Prompt.checkSend, false);
 
 		//Si el cuadro de ingreso de datos está activo y se pulsa la tecla ENTER, se procesa el dato
-		Prompt.input.addEventListener("keypress", e => {
-			if (e.which == 13){
-				Prompt.hide();
-				
-				if (Prompt.callback){
-					Prompt.callback();
-				}
-				else{
-					return true;
-				}				
-			}
-		}, false);
+		Prompt.input.addEventListener("keypress", e => e.which == 13 && Prompt.checkSend(), false);
 
 		//Al girar el dispositivo, cambian las dimensiones del fondo
 		window.addEventListener("orientationchange", Prompt.resize, false);
@@ -195,7 +175,6 @@ const Prompt = {
 			padding: 1% 2.5%;
 			display: flex;
 			align-items: center;
-			justify-content: center;
 			text-align: center;
 			flex-direction: column;
 			transition: all ease .15s;
@@ -263,7 +242,7 @@ const Prompt = {
 	},
 
 	checkSend: _ => {
-		let nodeValue = "";
+		let nodeValue = "", inputData;
 
 		//Si el cuadro de ingreso de datos tiene uno o más caracteres
 		if (Prompt.input.value.length){
@@ -273,15 +252,19 @@ const Prompt = {
 			//Si se adhirió un nodo antes del <input>, se toma su valor y se concatena con el valor del <input>
 			if (Prompt.nodeBefore && "value" in Prompt.input.previousElementSibling){
 				nodeValue = Prompt.input.previousElementSibling.value;
+				inputData = nodeValue + Prompt.input.value;
+			}
+			else{
+				inputData = Prompt.input.value;
 			}
 				
-			//Si se recibió una llamada de retorno y es de tipo Function, se le pasa el valor ingresado como argumento y se ejecuta
+			//Si se recibió una llamada de retorno, se le pasa el valor ingresado como argumento y se ejecuta
 			if (Prompt.callback){
-				Prompt.callback(nodeValue + Prompt.input.value);
+				Prompt.callback(inputData);
 			}
 			//Si no, se devuelve el valor ingresado
 			else{
-				return nodeValue + Prompt.input.value;
+				return inputData;
 			}
 		}
 		else{
