@@ -63,9 +63,6 @@ const Prompt = {
 	},
 
 	show: _ => {
-		//Se almacena el valor actual de la propiedad overflow del document
-		Prompt.overflow = getComputedStyle(document.body).overflow;
-
 		//Fondo
 		Prompt.createBack();
 
@@ -108,9 +105,6 @@ const Prompt = {
 		//Se adhiere el fondo al documento
 		document.body.appendChild(Prompt.back);
 
-		//Se retiran las barras de desplazamiento del documento
-		document.body.style.overflow = "hidden";
-
 		//Se le da el enfoque al cuadro de ingreso de datos
 		Prompt.input.focus();
 
@@ -134,10 +128,20 @@ const Prompt = {
 
 		//Si se pulsa el botón para cancelar, se cierran el fondo oscuro y el cuadro frontal
 		Prompt.cancel.addEventListener("click", Prompt.hide, false);
+
+		//Se bloquea el scrolling mientras haya un cuadro de confirmación presente
+		window.addEventListener("scroll", _ => {
+			const prompts = document.querySelectorAll("[id^=promptBack]");
+
+			if (prompts.length){
+				prompts[prompts.length - 1].scrollIntoView();
+			}
+		}, false);
 	},
 
 	createBack: _ => {
 		Prompt.back = document.createElement("div");
+		Prompt.back.id = `promptBack-${new Date().getTime()}`;
 		Prompt.back.classList.add("prompt");
 		Prompt.back.style = `
 			width: ${window.innerWidth}px;
@@ -168,10 +172,10 @@ const Prompt = {
 		Prompt.front = document.createElement("div");
 		Prompt.front.style = `
 			width: ${Prompt.width()};
-			background-color: ${Prompt.content?.front?.backgroundColor ?? "#FFFFEF"};
+			background-color: ${Prompt.content?.front?.backgroundColor?.length ? Prompt.content.front.backgroundColor : "#FFFFEF"};
 			box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-			border: ${Prompt.content?.front?.border ?? 0};
-			border-radius: ${Prompt.content?.front?.borderRadius ?? "5px"};
+			border: ${Prompt.content?.front?.border?.length ? Prompt.content.front.border : 0};
+			border-radius: ${Prompt.content?.front?.borderRadius?.length ? Prompt.content.front.borderRadius : "5px"};
 			padding: 1% 2.5%;
 			display: flex;
 			align-items: center;
@@ -201,7 +205,7 @@ const Prompt = {
 			margin-bottom: 1%;
 			user-select: none;
 			font-weight: bold;
-			color: ${Prompt.content?.label?.color ?? "#1a1a1a"};
+			color: ${Prompt.content?.label?.color?.length ? Prompt.content.label.color : "#1a1a1a"};
 		`;
 		Prompt.label.textContent = Prompt.mensaje;
 	},
@@ -215,9 +219,9 @@ const Prompt = {
 			background-color: transparent;
 			outline: 0;
 			border: 0;
-			width: ${Prompt.content?.input?.width ?? "90%"};
-			border-bottom: ${Prompt.content?.input?.borderBottom ?? ".1rem solid gray"};
-			color: ${Prompt.content?.input?.color ?? "#262626"}
+			width: ${Prompt.content?.input?.width?.length ? Prompt.content.input.width : "90%"};
+			border-bottom: ${Prompt.content?.input?.borderBottom?.length ? Prompt.content.input.borderBottom : ".1rem solid gray"};
+			color: ${Prompt.content?.input?.color?.length ? Prompt.content.input.color : "#262626"}
 		`;
 
 		//Si se establecieron otras propiedades, se añaden al <input>
@@ -295,9 +299,6 @@ const Prompt = {
 			fill: "forwards"
 		});
 
-		//Se devuelve al documento sus barras de desplazamiento
-		document.body.style.overflow = Prompt.overflow;
-
 		//Se vuelve a permitir la creación de un nuevo cuadro
 		Prompt.state = true;
 
@@ -307,11 +308,11 @@ const Prompt = {
 		}, 200);
 	},
 
-	width: _ => window.matchMedia("(min-width: 920px)").matches ? "350px" : "250px",
+	width: _ => window.matchMedia("(min-width: 850px)").matches ? "350px" : "250px",
 
 	resize: _ => {
-		Prompt.back.style.width = window.innerWidth + "px";
-		Prompt.back.style.height = window.innerHeight + "px";
+		Prompt.back.style.width = `${window.innerWidth}px`;
+		Prompt.back.style.height = `${window.innerHeight}px`;
 		Prompt.front.style.width = Prompt.width();
 		Prompt.back.style.top = 0;
 	},
